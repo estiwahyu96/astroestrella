@@ -1,9 +1,11 @@
 import streamlit as st
-import google.generativeai as genai
+from google import genai
 
+# === KONFIGURASI API ===
 API_KEY = st.secrets["GEMINI_API_KEY"]
-genai.configure(api_key=API_KEY)
+client = genai.Client(api_key=API_KEY)
 
+# === SYSTEM PROMPT ===
 SYSTEM_PROMPT = """
 Kamu adalah Astroestrella, teman belajar IPA untuk siswa SMP kelas VII.
 Tugasmu membantu mereka memahami materi "Sistem Tata Surya".
@@ -23,26 +25,44 @@ Tugasmu membantu mereka memahami materi "Sistem Tata Surya".
 - Dampak rotasi-revolusi terhadap kehidupan sehari-hari
 """
 
-model = genai.GenerativeModel(
-    model_name="gemini-3.5-flash-lite",
-    system_instruction=SYSTEM_PROMPT
-)
-
+# === TAMPILAN WEB ===
 st.set_page_config(page_title="Astroestrella", page_icon="🌟")
 st.title("🌟 Astroestrella")
 st.caption("Teman belajar Tata Surya untuk siswa SMP")
 
-if "chat" not in st.session_state:
-    st.session_state.chat = model.start_chat(history=[])
+# Simpan riwayat chat di session state
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
-for message in st.session_state.chat.history:
-    role = "user" if message.role == "user" else "assistant"
-    with st.chat_message(role):
-        st.write(message.parts[0].text)
+# Tampilkan riwayat percakapan
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.write(message["content"])
 
+# Input dari pengguna
 if prompt := st.chat_input("Tanya apa saja tentang Tata Surya..."):
+    # 1. Tampilkan pesan user
     with st.chat_message("user"):
         st.write(prompt)
+    
+    # Simpan pesan user ke riwayat
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    
+    # 2. Dapatkan respons dari Gemini
     with st.chat_message("assistant"):
-        response = st.session_state.chat.send_message(prompt)
-        st.write(response.text)
+        try:
+            # Panggil model dengan system prompt
+            response = client.models.generate_content(
+                model='gemini-3.5-flash-lite',
+                contents=prompt,
+                config=genai.types.GenerateContentConfig(
+                    system_instruction=SYSTEM_PROMPT,
+                )
+            )
+            st.write(response.text)
+            
+            # Simpan respons AI ke riwayat
+            st.session_state.messages.append({"role": "assistant", "content": response.text})
+            
+        except Exception as e:
+            st.error(f"Terjadi kesalahan: {e}")
