@@ -28,16 +28,9 @@ Tugasmu membantu mereka memahami materi "Sistem Tata Surya".
 
 # === TAMPILAN WEB ===
 st.set_page_config(page_title="Astroestrella", page_icon="logo.png")
-st.markdown(
-    """
-    <div style="display: flex; align-items: center; margin-bottom: 20px;">
-        <img src="https://raw.githubusercontent.com/estiwahyhu96/astroestrella/main/logo.png" width="60" style="margin-right: 15px;">
-        <h1 style="margin: 0;">Astroestrella</h1>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-st.caption("Hai! Aku Astroestrella 🚀 Teman belajar Tata Surya kamu. Mau tanya apa hari ini? Aku siap bantu!")
+st.image("logo.png", width=100)
+st.title("Astroestrella")
+st.caption("Hai! Aku Astroestrella 🚀 Teman belajar Tata Surya kamu.")
 
 # Simpan riwayat chat di session state
 if "messages" not in st.session_state:
