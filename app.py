@@ -27,7 +27,7 @@ Tugasmu membantu mereka memahami materi "Sistem Tata Surya".
 """
 
 # === TAMPILAN WEB ===
-st.set_page_config(page_title="Astroestrella", page_icon="🌟")
+st.set_page_config(page_title="Astroestrella", page_icon="logo.png")
 st.title("🌟 Astroestrella")
 st.caption("Teman belajar Tata Surya untuk siswa SMP")
 
