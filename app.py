@@ -3,7 +3,7 @@ from google import genai
 import streamlit.components.v1 as components
 
 # === KONFIGURASI HALAMAN ===
-st.set_page_config(page_title="Dashboard Tata Surya", page_icon="logo.png", layout="wide")
+st.set_page_config(page_title="Dashboard Tata Surya", page_icon="🪐", layout="wide")
 
 # === KONFIGURASI API AI ===
 API_KEY = st.secrets["GEMINI_API_KEY"]
